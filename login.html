@@ -2,51 +2,84 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Connexion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connexion - OptiCach Invest</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h2 {
+      color: #0066cc;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004a99;
+    }
+
+    a {margin-top: 15px;
+      display: inline-block;
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <h2>Connexion</h2>
-  <form onsubmit="loginUser(event)">
-    <label>Email :</label><br />
-    <input type="email" id="email" required /><br /><br />
+  <form action="dashboard.html" method="get">
+    <label>Email :</label>
+    <input type="email" name="email" required>
 
-    <label>Mot de passe :</label><br />
-    <input type="password" id="password" required /><br /><br />
+    <label>Mot de passe :</label>
+    <input type="password" name="password" required>
 
     <button type="submit">Se connecter</button>
   </form>
-  <p><a href="index.html">← Retour</a></p>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-
-    // Ta config Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
-      authDomain: "opticach-invest.firebaseapp.com",
-      projectId: "opticach-invest",
-      storageBucket: "opticach-invest.appspot.com",
-      messagingSenderId: "378672521992",
-      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    window.loginUser = function (event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value;const password = document.getElementById("password").value;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert("Connexion réussie !");
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert("Erreur : " + error.message);
-        });
-    };
-  </script>
+  <a href="index.html">← Retour à l'accueil</a>
 </body>
 </html>
