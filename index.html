@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OptiCach Invest - Notifications</title>
+  <title>OptiCach Invest</title>
 </head>
 <body>
-  <h1>OptiCach Invest - Notifications Push</h1>
-  <p id="status">Statut : En attente de permission...</p>
+  <h1>Bienvenue sur OptiCach Invest</h1>
+  <p>Les notifications push ont été désactivées.</p>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-messaging.js";
 
+    // Configuration Firebase (remplace par tes infos)
     const firebaseConfig = {
       apiKey: "BFbvEZkAn2O924wXqK9VYU55yiDEcN07jzuZUHQOYwv3RDosVObN8KFxse7jn3L1QiCqQ0FtOUp8ExW0Vj9HWZ8",
       authDomain: "opticach-invest.firebaseapp.com",
@@ -22,48 +22,10 @@
       appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
     };
 
+    // Initialise Firebase
     const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
 
-    const statusEl = document.getElementById('status');
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
-          console.log('Service Worker enregistré:', registration);
-        })
-        .catch(err => {
-          console.error('Erreur enregistrement Service Worker:', err);
-        });
-    } else {
-      statusEl.textContent = "Service Worker non supporté par ce navigateur.";
-    }
-
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        statusEl.textContent = "Permission accordée, récupération du token...";
-
-        getToken(messaging, { vapidKey: 'TA_CLE_VAPID_ICI' }) // <-- Remplace ici ta clé VAPID
-          .then(currentToken => {
-            if (currentToken) {
-              statusEl.textContent = "Token reçu. Tu peux envoyer des notifications.";
-              console.log('Token FCM:', currentToken);
-              // Ici tu peux envoyer ce token à ton backend
-            } else {
-              statusEl.textContent = "Aucun token disponible.";
-            }
-          })
-          .catch(err => {
-            statusEl.textContent = "Erreur récupération token : " + err;
-          });
-
-      } else {
-        statusEl.textContent = "Permission notification refusée.";
-      }
-    });
-
-    onMessage(messaging, (payload) => {
-      console.log('Notification reçue:', payload);alert("BIENVENUE DANS OPTICACH-INVEST : Investissez avec nous. Faites-nous confiance !");
-    });
+    // Plus de code pour notifications ici, elles sont désactivées.
   </script>
 </body>
 </html>
