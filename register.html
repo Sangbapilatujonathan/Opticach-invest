@@ -3,96 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Créer un compte - OptiCach Invest</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Inscription - OptiCach Invest</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #f0f2f5;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-
-    .container {
-      max-width: 400px;
-      margin: 60px auto;
+    .form-container {
       background: #fff;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
     }
-
     h2 {
       text-align: center;
-      color: #004aad;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
+      margin-bottom: 20px;
       color: #333;
     }
-
     input {
       width: 100%;
       padding: 10px;
+      margin: 8px 0;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 16px;
+      border-radius: 4px;
     }
-
     button {
       width: 100%;
       padding: 12px;
-      background: #004aad;
-      color: white;
-      border: none;font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
       background: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
     }
-
+    button:hover {
+      background: #0056b3;
+    }
     .link {
-      margin-top: 15px;
       text-align: center;
-    }
-
-    .link a {
-      color: #004aad;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .link a:hover {
-      text-decoration: underline;
-    }
-  </style>
+      margin-top: 15px;
+    }</style>
 </head>
 <body>
-  <div class="container">
+  <div class="form-container">
     <h2>Créer un compte</h2>
-    <form>
-      <label for="email">Adresse e-mail</label>
-      <input type="email" id="email" required>
-
-      <label for="password">Mot de passe</label>
-      <input type="password" id="password" required>
-
-      <label for="confirm">Confirmer le mot de passe</label>
-      <input type="password" id="confirm" required>
-
+    <form id="registerForm">
+      <input type="text" id="nom" placeholder="Nom complet" required />
+      <input type="email" id="email" placeholder="Adresse Gmail" required />
+      <input type="password" id="password" placeholder="Mot de passe" required />
+      <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required />
+      <input type="text" id="parrain" placeholder="Code de parrainage (facultatif)" />
       <button type="submit">S'inscrire</button>
     </form>
-
     <div class="link">
-      <p>Déjà un compte ? <a href="login.html">Se connecter</a></p>
+      <a href="login.html">Déjà un compte ? Se connecter</a>
     </div>
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
+      authDomain: "opticach-invest.firebaseapp.com",
+      projectId: "opticach-invest",
+      storageBucket: "opticach-invest.appspot.com",
+      messagingSenderId: "378672521992",
+      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
+    };const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (!email.endsWith("@gmail.com")) {
+        alert("Seules les adresses Gmail sont acceptées.");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Le mot de passe doit contenir au moins 6 caractères.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Les mots de passe ne correspondent pas.");
+        return;
+      }
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Compte créé avec succès !");
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        alert("Erreur : " + error.message);
+      }
+    });
+  </script>
 </body>
-        </html>
+</html>

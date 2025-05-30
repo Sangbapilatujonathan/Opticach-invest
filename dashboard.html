@@ -2,44 +2,154 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard - OptiCach Invest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de bord - OptiCach Invest</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2c3e50;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    .solde {
+      font-size: 1.5em;
+      color: #27ae60;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #2980b9;
+      color: white;
+    }
+    #logoutBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #logoutBtn:hover {
+      background-color: #c0392b;
+    }
+  </style>
 </head>
-<body>
-  <h1>Bienvenue sur votre tableau de bord</h1>
-  <p id="userEmail">Chargement des infos...</p>
-  <button id="logoutBtn">Se déconnecter</button>
-
+<body><header>
+    <h1>Bienvenue sur votre tableau de bord</h1>
+  </header>
+  <div class="container">
+    <div class="solde">Solde actuel : <strong id="balance">$0.00</strong></div>
+    <h2>Historique des transactions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Montant</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="transactionsTable">
+        <tr><td colspan="4">Chargement...</td></tr>
+      </tbody>
+    </table>
+    <button id="logoutBtn">Se déconnecter</button>
+  </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
       authDomain: "opticach-invest.firebaseapp.com",
       projectId: "opticach-invest",
-      storageBucket: "opticach-invest.firebasestorage.app",
+      storageBucket: "opticach-invest.appspot.com",
       messagingSenderId: "378672521992",
       appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);const db = getFirestore(app);
+
+    const balanceElement = document.getElementById('balance');
+    const transactionsTable = document.getElementById('transactionsTable');
+
+    onAuthStateChanged(auth, async (user) => 
+      if (!user) 
+        window.location.href = "login.html";
+        return;
+      
+
+      try 
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) 
+          const balance = userDocSnap.data().balance || 0;
+          balanceElement.textContent = `balance.toFixed(2)`;
+         else 
+          balanceElement.textContent = "0.00";
+        }
+
+        const transactionsRef = collection(db, "users", user.uid, "transactions");
+        const q = query(transactionsRef, orderBy("date", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        transactionsTable.innerHTML = "";
+
+        if (querySnapshot.empty) {
+          transactionsTable.innerHTML = "<tr><td colspan='4'>Aucune transaction trouvée.</td></tr>";
+        } else {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const date = data.date ? new Date(data.date.seconds * 1000).toLocaleDateString() : "N/A";
+            const type = data.type || "N/A";const amount = data.amount !== undefined ? `
+    
+{data.amount.toFixed(2)}` : "N/A";
+            const status = data.status || "N/A";
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>date</td>
+              <td>{type}</td>
+              <td>amount</td>
+              <td style="color:{status === "Réussi" ? "green" : "red"};">${status}</td>
+            `;
+            transactionsTable.appendChild(row);
+          });
+        }
+
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+        transactionsTable.innerHTML = "<tr><td colspan='4'>Erreur lors du chargement des transactions.</td></tr>";
+      }
+    });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       signOut(auth).then(() => {
-        alert("Déconnecté avec succès !");window.location.href = "login.html";
-      }).catch((error) => {
-        alert("Erreur lors de la déconnexion : " + error.message);
-      });
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('userEmail').textContent = `Connecté en tant que : ${user.email}`;
-      } else {
+        alert("Déconnecté avec succès !");
         window.location.href = "login.html";
-      }
+      }).catch((error) => {
+        alert("Erreur : " + error.message);
+      });
     });
   </script>
 </body>
