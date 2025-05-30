@@ -6,90 +6,120 @@
   <title>Connexion - OptiCach Invest</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #2980b9;
+      background: linear-gradient(135deg, #2980b9, #6dd5fa);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0 20px;
+      color: #fff;
     }
-    .login-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 100%;
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px 35px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
       max-width: 400px;
+      width: 100%;
+      text-align: center;
     }
     h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
     }
-    input {
+    input[type="email"], input[type="password"] {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 14px 15px;
+      margin: 12px 0 20px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      background: #28a745;
-      color: white;
+      background-color: #27ae60;
       border: none;
-      font-size: 16px;
-      border-radius: 5px;
+      padding: 14px 0;width: 100%;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
       cursor: pointer;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.6);
+      transition: background-color 0.3s ease;
     }
     button:hover {
-      background: #218838;
+      background-color: #1e8449;
+      box-shadow: 0 7px 20px rgba(30, 132, 73, 0.8);
     }
     .link {
-      text-align: center;
       margin-top: 15px;
+      font-size: 0.95rem;
+    }
+    .link a {
+      color: #f39c12;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
-<body><div class="login-container">
-    <h2>Connexion</h2>
+<body>
+  <div class="container">
+    <h2>Se connecter</h2>
     <form id="loginForm">
-      <input type="email" id="email" placeholder="Adresse email" required />
+      <input type="email" id="email" placeholder="Email" required />
       <input type="password" id="password" placeholder="Mot de passe" required />
-      <button type="submit">Se connecter</button>
+      <button type="submit">Connexion</button>
     </form>
     <div class="link">
-      <a href="register.html">Créer un compte</a>
+      Pas encore de compte ? <a href="register.html">Inscrivez-vous</a>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
+    const firebaseConfig = {apiKey: "TA_CLE_API",
       authDomain: "opticach-invest.firebaseapp.com",
       projectId: "opticach-invest",
       storageBucket: "opticach-invest.appspot.com",
       messagingSenderId: "378672521992",
-      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
+      appId: "TON_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Connexion réussie !");
+    // Rediriger si déjà connecté
+    onAuthStateChanged(auth, user => {
+      if (user) {
         window.location.href = "dashboard.html";
-      } catch (error) {
-        alert("Erreur de connexion : " + error.message);
       }
+    });
+
+    // Connexion formulaire
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Connecté avec succès !");
+          window.location.href = "dashboard.html";
+        })
+        .catch(err => {
+          alert("Erreur : " + err.message);
+        });
     });
   </script>
 </body>

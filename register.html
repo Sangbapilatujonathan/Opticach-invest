@@ -5,111 +5,117 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inscription - OptiCach Invest</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
+    body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f39c12, #d35400);
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0 20px;
+      color: white;
     }
-    .form-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
+    .container {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 40px 35px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
       max-width: 400px;
+      width: 100%;
+      text-align: center;
     }
     h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
     }
-    input {
+    input[type="text"], input[type="email"], input[type="password"] {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 14px 15px;
+      margin: 12px 0 20px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
+      background-color: #d35400;
       border: none;
+      padding: 14px 0;
+      width: 100%;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
       color: white;
-      font-size: 16px;
-      border-radius: 4px;
       cursor: pointer;
-      margin-top: 10px;
+      box-shadow: 0 5px 15px rgba(211, 84, 0, 0.6);
+      transition: background-color 0.3s ease;
     }
-    button:hover {
-      background: #0056b3;
+    button:hover {background-color: #a84300;
+      box-shadow: 0 7px 20px rgba(168, 67, 0, 0.8);
     }
     .link {
-      text-align: center;
       margin-top: 15px;
-    }</style>
+      font-size: 0.95rem;
+    }
+    .link a {
+      color: #27ae60;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <div class="form-container">
+  <div class="container">
     <h2>Créer un compte</h2>
     <form id="registerForm">
-      <input type="text" id="nom" placeholder="Nom complet" required />
-      <input type="email" id="email" placeholder="Adresse Gmail" required />
-      <input type="password" id="password" placeholder="Mot de passe" required />
-      <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required />
-      <input type="text" id="parrain" placeholder="Code de parrainage (facultatif)" />
+      <input type="text" id="username" placeholder="Nom complet" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Mot de passe" required minlength="6" />
       <button type="submit">S'inscrire</button>
     </form>
     <div class="link">
-      <a href="login.html">Déjà un compte ? Se connecter</a>
+      Déjà un compte ? <a href="login.html">Connectez-vous</a>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
       authDomain: "opticach-invest.firebaseapp.com",
       projectId: "opticach-invest",
-      storageBucket: "opticach-invest.appspot.com",
-      messagingSenderId: "378672521992",
+      storageBucket: "opticach-invest.appspot.com",messagingSenderId: "378672521992",
       appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
-    };const app = initializeApp(firebaseConfig);
+    };
+
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (!email.endsWith("@gmail.com")) {
-        alert("Seules les adresses Gmail sont acceptées.");
-        return;
-      }
+      const username = e.target.username.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
 
-      if (password.length < 6) {
-        alert("Le mot de passe doit contenir au moins 6 caractères.");
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert("Les mots de passe ne correspondent pas.");
-        return;
-      }
-
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Compte créé avec succès !");
-        window.location.href = "dashboard.html";
-      } catch (error) {
-        alert("Erreur : " + error.message);
-      }
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          return updateProfile(userCredential.user, { displayName: username });
+        })
+        .then(() => {
+          alert("Compte créé avec succès !");
+          window.location.href = "dashboard.html";
+        })
+        .catch(error => {
+          alert("Erreur : " + error.message);
+        });
     });
   </script>
 </body>
