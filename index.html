@@ -4,11 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OptiCach Invest</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6dd5fa, #2980b9);
+      color: #fff;
+      margin: 0;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    p {
+      font-size: 1.3rem;
+      max-width: 600px;
+      margin-bottom: 40px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 40px;
+      margin: 0 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      text-decoration: none;
+      color: white;
+      user-select: none;
+    }
+
+    .btn-login {
+      background-color: #27ae60;
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.6);
+    }
+
+    .btn-login:hover {
+      background-color: #1e8449;
+      box-shadow: 0 7px 20px rgba(30, 132, 73, 0.8);
+    }
+
+    .btn-register {
+      background-color: #f39c12;
+      box-shadow: 0 5px 15px rgba(243, 156, 18, 0.6);
+    }
+
+    .btn-register:hover {
+      background-color: #d68910;
+      box-shadow: 0 7px 20px rgba(214, 137, 16, 0.8);
+    }
+  </style>
 </head>
 <body>
   <h1>Bienvenue sur OptiCach Invest</h1>
-  <p>Votre plateforme d'investissement fiable et sécurisée.</p>
-  <a href="login.html">Se connecter</a> |
-  <a href="register.html">Créer un compte</a>
+  <p>Votre plateforme d'investissement intelligent. Connectez-vous ou inscrivez-vous pour commencer à investir facilement et en toute sécurité.</p>
+  
+  <a href="login.html" class="btn btn-login">Se connecter</a>
+  <a href="register.html" class="btn btn-register">S'inscrire</a>
 </body>
 </html>
