@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion</title>
+</head>
+<body>
+  <h2>Connexion</h2>
+  <form onsubmit="loginUser(event)">
+    <label>Email :</label><br />
+    <input type="email" id="email" required /><br /><br />
+
+    <label>Mot de passe :</label><br />
+    <input type="password" id="password" required /><br /><br />
+
+    <button type="submit">Se connecter</button>
+  </form>
+  <p><a href="index.html">← Retour</a></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    // Ta config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
+      authDomain: "opticach-invest.firebaseapp.com",
+      projectId: "opticach-invest",
+      storageBucket: "opticach-invest.appspot.com",
+      messagingSenderId: "378672521992",
+      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.loginUser = function (event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value;const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Connexion réussie !");
+          window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          alert("Erreur : " + error.message);
+        });
+    };
+  </script>
+</body>
+</html>

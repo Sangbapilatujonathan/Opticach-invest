@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inscription</title>
+  <script type="module">
+    // Import des modules Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    // Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
+      authDomain: "opticach-invest.firebaseapp.com",
+      projectId: "opticach-invest",
+      storageBucket: "opticach-invest.appspot.com",
+      messagingSenderId: "378672521992",
+      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
+    };
+
+    // Initialisation de Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Fonction pour enregistrer l'utilisateurwindow.enregistrerUtilisateur = async function (e) {
+      e.preventDefault();
+      const nom = document.getElementById("nom").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const parrain = document.getElementById("parrain").value.trim();
+
+      try {
+        // Création de l'utilisateur avec Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Enregistrement des informations supplémentaires dans Firestore
+        await setDoc(doc(db, "utilisateurs", user.uid), {
+          nom,
+          email,
+          Numéro téléphone,
+          parrain,
+          dateInscription: new Date().toISOString()
+        });
+
+        alert("Inscription réussie !");
+        window.location.href = "login.html";
+      } catch (error) {
+        alert("Erreur : " + error.message);
+      }
+    };
+  </script>
+</head>
+<body>
+  <h2>Créer un compte</h2>
+  <form onsubmit="enregistrerUtilisateur(event)">
+    <label for="nom">Nom complet :</label><br>
+    <input type="text" id="nom" required><br><br>
+
+    <label for="email">Email :</label><br>
+    <input type="email" id="email" required><br><br><label for="password">Mot de passe :</label><br>
+    <input type="password" id="password" required><br><br>
+
+    <label for="parrain">Code de parrainage (facultatif) :</label><br>
+    <input type="text" id="parrain"><br><br>
+
+    <button type="submit">S'inscrire</button>
+  </form>
+
+  <p><a href="login.html">← Déjà un compte ? Connexion</a></p>
+</body>
+</html>
