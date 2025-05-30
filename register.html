@@ -2,73 +2,97 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Inscription</title>
-  <script type="module">
-    // Import des modules Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Créer un compte - OptiCach Invest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+    }
 
-    // Configuration Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCU66jpNYUdvJ1RW6UIrTViw_oew2Dm4dQ",
-      authDomain: "opticach-invest.firebaseapp.com",
-      projectId: "opticach-invest",
-      storageBucket: "opticach-invest.appspot.com",
-      messagingSenderId: "378672521992",
-      appId: "1:378672521992:web:3d04c33bbc92e3ad2d42bd"
-    };
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
 
-    // Initialisation de Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    h2 {
+      text-align: center;
+      color: #004aad;
+      margin-bottom: 25px;
+    }
 
-    // Fonction pour enregistrer l'utilisateurwindow.enregistrerUtilisateur = async function (e) {
-      e.preventDefault();
-      const nom = document.getElementById("nom").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const parrain = document.getElementById("parrain").value.trim();
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
 
-      try {
-        // Création de l'utilisateur avec Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
 
-        // Enregistrement des informations supplémentaires dans Firestore
-        await setDoc(doc(db, "utilisateurs", user.uid), {
-          nom,
-          email,
-          Numéro téléphone,
-          parrain,
-          dateInscription: new Date().toISOString()
-        });
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #004aad;
+      color: white;
+      border: none;font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-        alert("Inscription réussie !");
-        window.location.href = "login.html";
-      } catch (error) {
-        alert("Erreur : " + error.message);
-      }
-    };
-  </script>
+    button:hover {
+      background: #007bff;
+    }
+
+    .link {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .link a {
+      color: #004aad;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h2>Créer un compte</h2>
-  <form onsubmit="enregistrerUtilisateur(event)">
-    <label for="nom">Nom complet :</label><br>
-    <input type="text" id="nom" required><br><br>
+  <div class="container">
+    <h2>Créer un compte</h2>
+    <form>
+      <label for="email">Adresse e-mail</label>
+      <input type="email" id="email" required>
 
-    <label for="email">Email :</label><br>
-    <input type="email" id="email" required><br><br><label for="password">Mot de passe :</label><br>
-    <input type="password" id="password" required><br><br>
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" required>
 
-    <label for="parrain">Code de parrainage (facultatif) :</label><br>
-    <input type="text" id="parrain"><br><br>
+      <label for="confirm">Confirmer le mot de passe</label>
+      <input type="password" id="confirm" required>
 
-    <button type="submit">S'inscrire</button>
-  </form>
+      <button type="submit">S'inscrire</button>
+    </form>
 
-  <p><a href="login.html">← Déjà un compte ? Connexion</a></p>
+    <div class="link">
+      <p>Déjà un compte ? <a href="login.html">Se connecter</a></p>
+    </div>
+  </div>
 </body>
-</html>
+        </html>
